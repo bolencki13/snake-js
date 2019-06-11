@@ -12,9 +12,7 @@ class Board extends React.Component {
           key={`w-${w}`}
           width={Math.ceil(kMaxCells / this.props.size.width)}
           isInFirstRow={h === 0}
-        >
-          {`${h}-${w}`}
-        </Cell>
+        ></Cell>
       )
     }
 

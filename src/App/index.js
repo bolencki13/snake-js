@@ -6,7 +6,7 @@ const height = 12
 
 function App() {
   return (
-    <div className="container">
+    <div className="container mt-3">
       <Board
         size={{
           width,
