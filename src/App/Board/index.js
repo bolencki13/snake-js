@@ -53,6 +53,37 @@ class Board extends React.Component {
 
     return (
       <div ref={el => (this.board = el)} {...SnakeServiceEvents} tabIndex="1">
+        <div className="row no-gutters">
+          <div className="col-12 justify-content-between">
+            <h1>Snake Game</h1>
+            {!this.props.game.isPlaying ? (
+              this.props.game.hasWon ? (
+                <div className="alert alert-success col-auto" role="alert">
+                  You&#39;ve Won!
+                  <button
+                    className="btn btn-secondary ml-2 p-2"
+                    type="button"
+                    onClick={() => this.props.game.reset()}
+                  >
+                    Play Again
+                  </button>
+                </div>
+              ) : (
+                <div className="alert alert-danger col-auto" role="alert">
+                  Game Over :(
+                  <button
+                    className="btn btn-secondary ml-2 p-2"
+                    type="button"
+                    onClick={() => this.props.game.reset()}
+                  >
+                    Play Again
+                  </button>
+                </div>
+              )
+            ) : null}
+            <h5>Score: {this.props.game.score}</h5>
+          </div>
+        </div>
         {board}
       </div>
     )
@@ -81,6 +112,12 @@ Board.propTypes = {
       x: PropTypes.number.isRequired,
       y: PropTypes.number.isRequired
     }).isRequired
+  }).isRequired,
+  game: PropTypes.shape({
+    isPlaying: PropTypes.bool,
+    score: PropTypes.number.isRequired,
+    reset: PropTypes.func.isRequired,
+    hasWon: PropTypes.bool
   }).isRequired
 }
 

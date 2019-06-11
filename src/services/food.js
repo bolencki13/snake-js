@@ -18,7 +18,7 @@ const HOCFoodService = origin => Component => {
       result = isValidInput(newOrigin.y + 1, 'origin.y')
       if (result) throw result
 
-      this.setState({
+      return this.setState({
         origin: newOrigin
       })
     }

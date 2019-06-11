@@ -3,14 +3,27 @@ import React from 'react'
 const HOCGameService = Component => {
   class GameService extends React.Component {
     state = {
-      isPlaying: true
+      isPlaying: true,
+      hasWon: true
     }
 
     setPlaying = newPlaying => {
-      if (typeof newPlaying !== 'boolean')
+      if (typeof newPlaying !== 'boolean') {
+        throw new Error('"setPlaying" takes a boolean value.')
+      }
+
+      return this.setState({
+        isPlaying: newPlaying,
+        hasWon: false
+      })
+    }
+
+    setWon = () => {
+      return this.setPlaying(false).then(() =>
         this.setState({
-          isPlaying: newPlaying
+          hasWon: true
         })
+      )
     }
 
     render() {
@@ -19,7 +32,8 @@ const HOCGameService = Component => {
           {...this.props}
           game={{
             ...this.state,
-            setPlaying: this.setPlaying
+            setPlaying: this.setPlaying,
+            setWon: this.setWon
           }}
         />
       )

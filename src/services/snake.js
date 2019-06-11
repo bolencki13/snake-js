@@ -15,14 +15,16 @@ const HOCSnakeService = origin => Component => {
   result = isValidInput(origin.y + 1, 'origin.y')
   if (result) throw result
 
+  const INITIAL_STATE = {
+    squares: [origin],
+    direction: 'right'
+  }
+
   class SnakeService extends React.Component {
     constructor() {
       super()
 
-      this.state = {
-        squares: [origin],
-        direction: 'right'
-      }
+      this.state = INITIAL_STATE
 
       ArrowKeysReact.config({
         left: () => {
@@ -49,8 +51,7 @@ const HOCSnakeService = origin => Component => {
     }
 
     componentDidMount() {
-      const intervalId = setInterval(this.timer, kTimeInterval)
-      this.intervalId = intervalId
+      this.resetGame()
     }
 
     componentWillUnmount() {
@@ -148,7 +149,11 @@ const HOCSnakeService = origin => Component => {
         }).length > 0
       const hasEmptySquares =
         this.props.size.width * this.props.size.height > squares.length
-      if (isTouchingSelf && hasEmptySquares) {
+
+      if (!hasEmptySquares) {
+        this.props.game.setWon(true)
+        return
+      } else if (isTouchingSelf && hasEmptySquares) {
         await this.gameOver()
         return
       }
@@ -159,6 +164,14 @@ const HOCSnakeService = origin => Component => {
       })
     }
 
+    resetGame = async () => {
+      await this.setState(INITIAL_STATE)
+
+      const intervalId = setInterval(this.timer, kTimeInterval)
+      this.intervalId = intervalId
+      this.props.game.setPlaying(true)
+    }
+
     render() {
       return (
         <Component
@@ -166,7 +179,8 @@ const HOCSnakeService = origin => Component => {
           snake={this.state}
           game={{
             ...this.props.game,
-            score: this.state.squares.length - 1
+            score: this.state.squares.length - 1,
+            reset: this.resetGame
           }}
         />
       )
@@ -191,7 +205,8 @@ const HOCSnakeService = origin => Component => {
     }).isRequired,
     game: PropTypes.shape({
       isPlaying: PropTypes.bool,
-      setPlaying: PropTypes.func.isRequired
+      setPlaying: PropTypes.func.isRequired,
+      setWon: PropTypes.func.isRequired
     }).isRequired
   }
 
