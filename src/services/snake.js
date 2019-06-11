@@ -57,6 +57,41 @@ const HOCSnakeService = origin => Component => {
       return this.gameOver()
     }
 
+    componentDidUpdate(previousProps, previousState) {
+      const head = this.state.squares[0]
+      const food = this.props.food.origin
+
+      if (food.x === head.x && food.y === head.y) {
+        this.setState(state => {
+          const tail = { ...state.squares[state.squares.length - 1] }
+          return {
+            squares: state.squares.concat(tail)
+          }
+        })
+        this.generateNewFoodPosition()
+      }
+    }
+
+    generateNewFoodPosition = () => {
+      const newFood = {
+        x: randomNumberBetween(0, this.props.size.width),
+        y: randomNumberBetween(0, this.props.size.height)
+      }
+
+      const isUnderSnake =
+        this.state.squares.filter(square => {
+          return square.x === newFood.x && square.y === newFood.y
+        }).length > 0
+      const hasEmptySquares =
+        this.props.size.width * this.props.size.height >
+        this.state.squares.length
+      if (isUnderSnake && hasEmptySquares) {
+        return this.generateNewFoodPosition()
+      } else {
+        this.props.food.setOrigin(newFood)
+      }
+    }
+
     gameOver = async () => {
       await this.props.game.setPlaying(false)
       clearInterval(this.intervalId)
@@ -124,30 +159,15 @@ const HOCSnakeService = origin => Component => {
       })
     }
 
-    componentDidUpdate(previousProps, previousState) {
-      const head = this.state.squares[0]
-      const food = this.props.food.origin
-
-      if (food.x === head.x && food.y === head.y) {
-        this.setState(state => {
-          const tail = { ...state.squares[state.squares.length - 1] }
-          return {
-            squares: state.squares.concat(tail)
-          }
-        })
-        this.props.food.setOrigin({
-          x: randomNumberBetween(0, this.props.size.width),
-          y: randomNumberBetween(0, this.props.size.height)
-        })
-      }
-    }
-
     render() {
       return (
         <Component
           {...this.props}
           snake={this.state}
-          score={this.state.squares.length - 1}
+          game={{
+            ...this.props.game,
+            score: this.state.squares.length - 1
+          }}
         />
       )
     }
