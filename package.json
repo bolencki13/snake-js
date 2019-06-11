@@ -13,7 +13,7 @@
   "scripts": {
     "start": "NODE_PATH=src REACT_APP_ENV=dev react-scripts start",
     "build": "NODE_PATH=src REACT_APP_ENV=prod react-scripts build",
-    "test": "CI-true NODE_PATH=src REACT_APP_ENV=prod react-scripts test --coverage --colors"
+    "test": "CI=true NODE_PATH=src REACT_APP_ENV=prod react-scripts test --coverage --colors"
   },
   "eslintConfig": {
     "extends": "react-app"
