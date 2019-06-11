@@ -1,7 +1,12 @@
 {
   "name": "snake-web",
   "version": "0.1.0",
-  "private": true,
+  "author": {
+    "name": "Brian Olencki",
+    "email": "bolencki13@bolencki13.com"
+  },
+  "homepage": "https://bolencki13.github.io/snake-js",
+  "license": "MIT",
   "dependencies": {
     "arrow-keys-react": "^1.0.6",
     "bootstrap": "^4.3.1",
