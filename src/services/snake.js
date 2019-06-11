@@ -1,7 +1,11 @@
 import React from 'react'
 import ArrowKeysReact from 'arrow-keys-react'
 import PropTypes from 'prop-types'
-import { isValidInput, kTimeInterval } from 'services/helper'
+import {
+  isValidInput,
+  kTimeInterval,
+  randomNumberBetween
+} from 'services/helper'
 
 export const SnakeServiceEvents = ArrowKeysReact.events
 
@@ -17,7 +21,8 @@ const HOCSnakeService = origin => Component => {
 
       this.state = {
         squares: [origin],
-        direction: 'right'
+        direction: 'right',
+        growOnNextTick: false
       }
 
       ArrowKeysReact.config({
@@ -39,7 +44,11 @@ const HOCSnakeService = origin => Component => {
 
     timer = () => {
       const squares = [...this.state.squares]
-      const head = squares[0]
+      const head = { ...squares[0] }
+
+      for (let i = squares.length - 1; i > 0; i--) {
+        squares[i] = { ...squares[i - 1] }
+      }
 
       switch (this.state.direction) {
         case 'up':
@@ -63,10 +72,29 @@ const HOCSnakeService = origin => Component => {
             head.x = head.x - 1
           }
       }
+      squares[0] = head
 
       this.setState({
         squares
       })
+    }
+
+    componentDidUpdate(previousProps, previousState) {
+      const head = this.state.squares[0]
+      const food = this.props.food.origin
+
+      if (food.x === head.x && food.y === head.y) {
+        this.setState(state => {
+          const tail = { ...state.squares[state.squares.length - 1] }
+          return {
+            squares: state.squares.concat(tail)
+          }
+        })
+        this.props.food.setOrigin({
+          x: randomNumberBetween(0, this.props.size.width),
+          y: randomNumberBetween(0, this.props.size.height)
+        })
+      }
     }
 
     render() {
@@ -82,6 +110,13 @@ const HOCSnakeService = origin => Component => {
       height: function(props, propName) {
         return isValidInput(props[propName], 'size.height')
       }
+    }).isRequired,
+    food: PropTypes.shape({
+      origin: PropTypes.shape({
+        x: PropTypes.number.isRequired,
+        y: PropTypes.number.isRequired
+      }).isRequired,
+      setOrigin: PropTypes.func.isRequired
     }).isRequired
   }
 

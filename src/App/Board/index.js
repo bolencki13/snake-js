@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Cell from './Cell'
 import SnakeBox from './Cell/Snake'
 import FoodBox from './Cell/Food'
-import { isValidInput, kMaxCells, randomNumberBetween } from 'services/helper'
+import { isValidInput, kMaxCells } from 'services/helper'
 import SnakeService, { SnakeServiceEvents } from 'services/snake'
 import FoodService from 'services/food'
 
@@ -34,19 +34,6 @@ class Board extends React.Component {
 
   componentDidMount() {
     this.board.focus()
-  }
-
-  componentDidUpdate(previousProps, previousState) {
-    const snakeHead = this.props.snake.squares[0]
-    const food = this.props.food.origin
-
-    if (food.x === snakeHead.x && food.y === snakeHead.y) {
-      console.log(this.props.food)
-      this.props.food.setOrigin({
-        x: randomNumberBetween(0, this.props.size.width),
-        y: randomNumberBetween(0, this.props.size.height)
-      })
-    }
   }
 
   render() {
@@ -92,8 +79,7 @@ Board.propTypes = {
     origin: PropTypes.shape({
       x: PropTypes.number.isRequired,
       y: PropTypes.number.isRequired
-    }).isRequired,
-    setOrigin: PropTypes.func.isRequired
+    }).isRequired
   }).isRequired
 }
 
