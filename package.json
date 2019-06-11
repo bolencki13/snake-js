@@ -18,7 +18,9 @@
   "scripts": {
     "start": "NODE_PATH=src REACT_APP_ENV=dev react-scripts start",
     "build": "NODE_PATH=src REACT_APP_ENV=prod react-scripts build",
-    "test": "CI=true NODE_PATH=src REACT_APP_ENV=prod react-scripts test --coverage --colors"
+    "test": "CI=true NODE_PATH=src REACT_APP_ENV=prod react-scripts test --coverage --colors",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -45,6 +47,7 @@
     "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-react": "^7.13.0",
     "eslint-plugin-standard": "^4.0.0",
+    "gh-pages": "^2.0.1",
     "husky": "^2.4.0",
     "lint-staged": "^8.2.0",
     "prettier": "^1.18.2",
