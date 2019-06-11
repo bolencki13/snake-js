@@ -1,7 +1,7 @@
 import React from 'react'
 import ArrowKeysReact from 'arrow-keys-react'
 import PropTypes from 'prop-types'
-import { isValidInput } from 'services/helper'
+import { isValidInput, kTimeInterval } from 'services/helper'
 
 export const SnakeServiceEvents = ArrowKeysReact.events
 
@@ -16,60 +16,54 @@ const HOCSnakeService = origin => Component => {
       super()
 
       this.state = {
-        squares: [origin]
+        squares: [origin],
+        direction: 'right'
       }
 
       ArrowKeysReact.config({
-        left: this.arrowLeft,
-        right: this.arrowRight,
-        up: this.arrowUp,
-        down: this.arrowDown
+        left: () => this.setState({ direction: 'left' }),
+        right: () => this.setState({ direction: 'right' }),
+        up: () => this.setState({ direction: 'up' }),
+        down: () => this.setState({ direction: 'down' })
       })
     }
 
-    arrowLeft = () => {
-      const squares = this.state.squares.map(square => {
-        if (square.x > 0) {
-          square.x = square.x - 1
-        }
-        return square
-      })
-      this.setState({
-        squares
-      })
+    componentDidMount() {
+      const intervalId = setInterval(this.timer, kTimeInterval)
+      this.intervalId = intervalId
     }
 
-    arrowRight = () => {
-      const squares = this.state.squares.map(square => {
-        if (square.x < this.props.size.width - 1) {
-          square.x = square.x + 1
-        }
-        return square
-      })
-      this.setState({
-        squares
-      })
+    componentWillUnmount() {
+      clearInterval(this.intervalId)
     }
 
-    arrowUp = () => {
-      const squares = this.state.squares.map(square => {
-        if (square.y > 0) {
-          square.y = square.y - 1
-        }
-        return square
-      })
-      this.setState({
-        squares
-      })
-    }
+    timer = () => {
+      const squares = [...this.state.squares]
+      const head = squares[0]
 
-    arrowDown = () => {
-      const squares = this.state.squares.map(square => {
-        if (square.y < this.props.size.height - 1) {
-          square.y = square.y + 1
-        }
-        return square
-      })
+      switch (this.state.direction) {
+        case 'up':
+          if (head.y > 0) {
+            head.y = head.y - 1
+          }
+          break
+        case 'down':
+          if (head.y < this.props.size.height - 1) {
+            head.y = head.y + 1
+          }
+          break
+        case 'right':
+          if (head.x < this.props.size.width - 1) {
+            head.x = head.x + 1
+          }
+          break
+        case 'left':
+        default:
+          if (head.x > 0) {
+            head.x = head.x - 1
+          }
+      }
+
       this.setState({
         squares
       })

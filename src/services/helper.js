@@ -1,5 +1,6 @@
 export const kMinCells = 1
 export const kMaxCells = 12
+export const kTimeInterval = 500
 
 export const isValidInput = (input, name) => {
   if (input === undefined || input === null) {
