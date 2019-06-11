@@ -2,7 +2,7 @@ export const kMinCells = 1
 export const kMaxCells = 12
 
 export const isValidInput = (input, name) => {
-  if (!input) {
+  if (input === undefined || input === null) {
     return new Error(`"${name}" is required.`)
   }
   if (typeof input !== 'number') {

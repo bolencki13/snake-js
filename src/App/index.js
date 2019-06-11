@@ -1,5 +1,6 @@
 import React from 'react'
 import Board from './Board'
+import './styles.scss'
 
 const width = 12
 const height = 12
