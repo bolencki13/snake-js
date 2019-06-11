@@ -26,10 +26,26 @@ const HOCSnakeService = origin => Component => {
       }
 
       ArrowKeysReact.config({
-        left: () => this.setState({ direction: 'left' }),
-        right: () => this.setState({ direction: 'right' }),
-        up: () => this.setState({ direction: 'up' }),
-        down: () => this.setState({ direction: 'down' })
+        left: () => {
+          if (this.state.direction !== 'right') {
+            this.setState({ direction: 'left' })
+          }
+        },
+        right: () => {
+          if (this.state.direction !== 'left') {
+            this.setState({ direction: 'right' })
+          }
+        },
+        up: () => {
+          if (this.state.direction !== 'down') {
+            this.setState({ direction: 'up' })
+          }
+        },
+        down: () => {
+          if (this.state.direction !== 'up') {
+            this.setState({ direction: 'down' })
+          }
+        }
       })
     }
 
@@ -98,7 +114,13 @@ const HOCSnakeService = origin => Component => {
     }
 
     render() {
-      return <Component {...this.props} snake={this.state} />
+      return (
+        <Component
+          {...this.props}
+          snake={this.state}
+          score={this.state.squares.length - 1}
+        />
+      )
     }
   }
 
