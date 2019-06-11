@@ -106,6 +106,17 @@ const HOCSnakeService = origin => Component => {
             return
           }
       }
+
+      const isTouchingSelf =
+        squares.filter(square => {
+          return square.x === head.x && square.y === head.y
+        }).length > 0
+      const hasEmptySquares =
+        this.props.size.width * this.props.size.height > squares.length
+      if (isTouchingSelf && hasEmptySquares) {
+        await this.gameOver()
+        return
+      }
       squares[0] = head
 
       this.setState({
