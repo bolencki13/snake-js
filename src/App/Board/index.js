@@ -16,6 +16,9 @@ class Board extends React.Component {
         this.props.snake.squares.filter(square => {
           return square.x === w && square.y === h
         }).length > 0
+      const isHeadSnake =
+        this.props.snake.squares[0].x === w &&
+        this.props.snake.squares[0].y === h
       const isFoodBox =
         this.props.food.origin.x === w && this.props.food.origin.y === h
 
@@ -25,7 +28,14 @@ class Board extends React.Component {
           width={Math.ceil(kMaxCells / this.props.size.width)}
           isInFirstRow={h === 0}
         >
-          {isSnakeCell ? <SnakeBox /> : isFoodBox ? <FoodBox /> : null}
+          {isSnakeCell ? (
+            <SnakeBox
+              isHead={isHeadSnake}
+              direction={this.props.snake.direction}
+            />
+          ) : isFoodBox ? (
+            <FoodBox />
+          ) : null}
         </Cell>
       )
     }
@@ -105,7 +115,8 @@ Board.propTypes = {
         x: PropTypes.number.isRequired,
         y: PropTypes.number.isRequired
       })
-    ).isRequired
+    ).isRequired,
+    direction: PropTypes.oneOf(['right', 'left', 'up', 'down'])
   }).isRequired,
   food: PropTypes.shape({
     origin: PropTypes.shape({
