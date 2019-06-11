@@ -2,8 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Cell from './Cell'
 import SnakeBox from './Cell/Snake'
-import { isValidInput, kMaxCells } from 'services/helper'
+import FoodBox from './Cell/Food'
+import { isValidInput, kMaxCells, randomNumberBetween } from 'services/helper'
 import SnakeService, { SnakeServiceEvents } from 'services/snake'
+import FoodService from 'services/food'
 
 class Board extends React.Component {
   generateCols = h => {
@@ -13,6 +15,8 @@ class Board extends React.Component {
         this.props.snake.squares.filter(square => {
           return square.x === w && square.y === h
         }).length > 0
+      const isFoodBox =
+        this.props.food.origin.x === w && this.props.food.origin.y === h
 
       row.push(
         <Cell
@@ -20,7 +24,7 @@ class Board extends React.Component {
           width={Math.ceil(kMaxCells / this.props.size.width)}
           isInFirstRow={h === 0}
         >
-          {isSnakeCell ? <SnakeBox /> : null}
+          {isSnakeCell ? <SnakeBox /> : isFoodBox ? <FoodBox /> : null}
         </Cell>
       )
     }
@@ -30,6 +34,19 @@ class Board extends React.Component {
 
   componentDidMount() {
     this.board.focus()
+  }
+
+  componentDidUpdate(previousProps, previousState) {
+    const snakeHead = this.props.snake.squares[0]
+    const food = this.props.food.origin
+
+    if (food.x === snakeHead.x && food.y === snakeHead.y) {
+      console.log(this.props.food)
+      this.props.food.setOrigin({
+        x: randomNumberBetween(0, this.props.size.width),
+        y: randomNumberBetween(0, this.props.size.height)
+      })
+    }
   }
 
   render() {
@@ -70,10 +87,22 @@ Board.propTypes = {
         y: PropTypes.number.isRequired
       })
     ).isRequired
+  }).isRequired,
+  food: PropTypes.shape({
+    origin: PropTypes.shape({
+      x: PropTypes.number.isRequired,
+      y: PropTypes.number.isRequired
+    }).isRequired,
+    setOrigin: PropTypes.func.isRequired
   }).isRequired
 }
 
-export default SnakeService({
-  x: 0,
-  y: 0
-})(Board)
+export default FoodService({
+  x: 5,
+  y: 5
+})(
+  SnakeService({
+    x: 0,
+    y: 0
+  })(Board)
+)

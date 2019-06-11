@@ -12,3 +12,7 @@ export const isValidInput = (input, name) => {
     return new Error(`"${name}" must be inclusively between 1-12.`)
   }
 }
+
+export const randomNumberBetween = (start, end) => {
+  return Math.floor(Math.random() * end) + start
+}
