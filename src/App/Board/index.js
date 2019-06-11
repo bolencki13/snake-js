@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Cell from './Cell'
+import SnakeBox from './Cell/Snake'
 import { isValidInput, kMaxCells } from 'services/helper'
-import './styles.scss'
 import SnakeService, { SnakeServiceEvents } from 'services/snake'
 
 class Board extends React.Component {
@@ -20,7 +20,7 @@ class Board extends React.Component {
           width={Math.ceil(kMaxCells / this.props.size.width)}
           isInFirstRow={h === 0}
         >
-          {isSnakeCell ? <div className="snake" /> : null}
+          {isSnakeCell ? <SnakeBox /> : null}
         </Cell>
       )
     }
