@@ -6,6 +6,7 @@ import FoodBox from './Cell/Food'
 import { isValidInput, kMaxCells } from 'services/helper'
 import SnakeService, { SnakeServiceEvents } from 'services/snake'
 import FoodService from 'services/food'
+import GameService from 'services/game'
 
 class Board extends React.Component {
   generateCols = h => {
@@ -83,12 +84,14 @@ Board.propTypes = {
   }).isRequired
 }
 
-export default FoodService({
-  x: 5,
-  y: 5
-})(
-  SnakeService({
-    x: 0,
-    y: 0
-  })(Board)
+export default GameService(
+  FoodService({
+    x: 5,
+    y: 5
+  })(
+    SnakeService({
+      x: 0,
+      y: 0
+    })(Board)
+  )
 )

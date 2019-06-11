@@ -21,8 +21,7 @@ const HOCSnakeService = origin => Component => {
 
       this.state = {
         squares: [origin],
-        direction: 'right',
-        growOnNextTick: false
+        direction: 'right'
       }
 
       ArrowKeysReact.config({
@@ -55,10 +54,17 @@ const HOCSnakeService = origin => Component => {
     }
 
     componentWillUnmount() {
+      return this.gameOver()
+    }
+
+    gameOver = async () => {
+      await this.props.game.setPlaying(false)
       clearInterval(this.intervalId)
     }
 
-    timer = () => {
+    timer = async () => {
+      if (!this.props.game.isPlaying) return
+
       const squares = [...this.state.squares]
       const head = { ...squares[0] }
 
@@ -70,22 +76,34 @@ const HOCSnakeService = origin => Component => {
         case 'up':
           if (head.y > 0) {
             head.y = head.y - 1
+          } else {
+            await this.gameOver()
+            return
           }
           break
         case 'down':
           if (head.y < this.props.size.height - 1) {
             head.y = head.y + 1
+          } else {
+            await this.gameOver()
+            return
           }
           break
         case 'right':
           if (head.x < this.props.size.width - 1) {
             head.x = head.x + 1
+          } else {
+            await this.gameOver()
+            return
           }
           break
         case 'left':
         default:
           if (head.x > 0) {
             head.x = head.x - 1
+          } else {
+            await this.gameOver()
+            return
           }
       }
       squares[0] = head
@@ -139,6 +157,10 @@ const HOCSnakeService = origin => Component => {
         y: PropTypes.number.isRequired
       }).isRequired,
       setOrigin: PropTypes.func.isRequired
+    }).isRequired,
+    game: PropTypes.shape({
+      isPlaying: PropTypes.bool,
+      setPlaying: PropTypes.func.isRequired
     }).isRequired
   }
 
