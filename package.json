@@ -10,7 +10,7 @@
   "dependencies": {
     "arrow-keys-react": "^1.0.6",
     "bootstrap": "^4.3.1",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1"
